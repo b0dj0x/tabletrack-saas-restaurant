@@ -11,7 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'tenant' => \App\Http\Middleware\TenantMiddleware::class,
+            'superadmin' => \App\Http\Middleware\SuperAdminMiddleware::class,
+            'restaurant_admin' => \App\Http\Middleware\RestaurantAdminMiddleware::class,
+            'staff' => \App\Http\Middleware\StaffMiddleware::class,
+        ]);
+        
+        $middleware->validateCsrfTokens(except: [
+            '*/payment/callback',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
